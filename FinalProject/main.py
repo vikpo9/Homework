@@ -27,7 +27,7 @@ MOTION_BLUR = "Motion Blur"
 
 
 def set_image_to_label(label, image, zoom=1):
-    image = Image.fromarray(image)
+    image = Image.fromarray(image.astype(np.uint8))
     image = ImageTk.PhotoImage(
         image.resize((int(image.width * zoom), int(image.height * zoom)))
     )

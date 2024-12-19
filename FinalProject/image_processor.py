@@ -11,7 +11,7 @@ class ImageProcessor:
         places = np.random.rand(*image.shape)
         noise = np.random.normal(0, 5, image.shape) * (places < percent / 100)
         noisy_image = np.clip(image + noise, 0, 255)
-        return noisy_image.astype(int)
+        return noisy_image.astype(np.uint8)
 
 
     @staticmethod
@@ -20,16 +20,16 @@ class ImageProcessor:
         from scipy.ndimage import convolve
 
         kernel = np.ones((kernel_size, 1)) / kernel_size
-        return np.clip(convolve(convolve(image, kernel), kernel.T), 0, 255).astype(int)
+        return np.clip(convolve(convolve(image, kernel), kernel.T), 0, 255).astype(np.uint8)
 
     @staticmethod
     def gauss_filter(image, kernel_size):
         sigma = kernel_size // 2 / 3
 
-        return cv2.GaussianBlur(image, (kernel_size, kernel_size), sigma)
+        return cv2.GaussianBlur(image, (kernel_size, kernel_size), sigma).astype(np.uint8)
 
 
-    
+
     @staticmethod
     def image_equalization(image):
 
@@ -39,7 +39,7 @@ class ImageProcessor:
         cdf_normalized = (cdf - cdf.min()) * 255 / (cdf.max() - cdf.min())
         
         equalized = cdf_normalized[image]
-        return equalized.astype(int)
+        return np.clip(equalized, 0, 255).astype(np.uint8)
 
     @staticmethod
     def statistic_correction(image, new_mean, new_std):
@@ -114,7 +114,7 @@ class ImageProcessor:
         height, width = image.shape[:2]
         x, y = np.meshgrid(np.arange(width), np.arange(height))
 
-        rand_x = np.clip(x + 20 * np.sin(2 * np.pi * y / 60), 0, width - 1).astype(int)
+        rand_x = np.clip(x + 20 * np.sin(2 * np.pi * y / 60), 0, width - 1).astype(np.uint8)
 
 
         return image[y, rand_x]
